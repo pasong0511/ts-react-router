@@ -2,6 +2,14 @@ import React from "react";
 import "./App.css";
 import { Router, Route, Link } from "router/Router";
 import { routes } from "routes";
+import { NotFound } from "component/NotFound";
+
+export interface IRoutesProps {
+    id: string;
+    path: string;
+    to: string;
+    params?: Record<string, string>;
+}
 
 const Home = () => <div className="page">Home Page</div>;
 const About = () => <div className="page">About Page</div>;
@@ -35,6 +43,9 @@ function App() {
             </Route>
             <Route path={routes.test.path}>
                 <Section />
+            </Route>
+            <Route path="*">
+                <NotFound />
             </Route>
         </Router>
     );

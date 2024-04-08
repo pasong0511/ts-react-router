@@ -3,13 +3,9 @@ import { createBrowserHistory } from "history";
 import { RouterContext } from "context/RouterContext";
 import Link from "./Link";
 import Route from "./Route";
-
-export interface IRoutesProps {
-    id: string;
-    path: string;
-    to: string;
-    params?: Record<string, string>;
-}
+import { IRoutesProps } from "App";
+import { matchPath } from "utils/matchPath";
+import { NotFound } from "component/NotFound";
 
 interface IRouteProps {
     children: React.ReactNode;
@@ -38,9 +34,23 @@ function Router({ children, routes }: IRouteProps) {
         };
     }, []);
 
+    // NotFound 여부를 판단하는 로직을 개선합니다.
+    const checkPathAgainstRoutes = (
+        path: string,
+        routes: { [key: string]: IRoutesProps }
+    ) => {
+        return Object.values(routes).some((route) =>
+            matchPath(route.path, path)
+        );
+    };
+
+    const isNotFound = !checkPathAgainstRoutes(currentPath, routes);
+
+    //currentPath를 컨텍스트 값으로 제공
+    //이 컨텍스트 내의 모든 컴포넌트가 현재 경로에 접근
     return (
         <RouterContext.Provider value={{ path: currentPath }}>
-            {children}
+            {isNotFound ? <NotFound /> : children}
         </RouterContext.Provider>
     );
 }
