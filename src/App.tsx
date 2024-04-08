@@ -42,7 +42,7 @@ function App() {
                 <Section />
             </Route>
             <Route path={routes.test.path}>
-                <Section />
+                {({ id }) => <Test id={id} />}
             </Route>
             <Route path="*">
                 <NotFound />
